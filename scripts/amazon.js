@@ -1,4 +1,10 @@
 import { cart } from '../data/cart.js';
+import { products } from '../data/products.js';
+
+//If you are in data/products.js and want another file in the same folder,
+// you’d use:
+// import something from './otherFile.js';
+
 //double dots or .. means the main folder JAVASCRIPT-AMAZON-PROJECT
 
 // import { cart as myCart } from '../data/cart.js';

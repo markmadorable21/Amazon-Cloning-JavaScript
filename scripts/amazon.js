@@ -1,3 +1,10 @@
+import { cart } from '../data/cart.js';
+//double dots or .. means the main folder JAVASCRIPT-AMAZON-PROJECT
+
+// import { cart as myCart } from '../data/cart.js';
+
+// const cart =[]; declaring this cart will have a naming conflict with the imported cart variable, so we should rename is by adding 'as'
+
 let productsHTML = ''; //forEach method will read each values in the array so everytime we access each array we will put it in the productsHTMl to combine all iterated objects of product
 
 products.forEach((product) => {
@@ -41,7 +48,7 @@ products.forEach((product) => {
 
           <div class="product-spacer"></div>
 
-          <div class="added-to-cart">
+          <div class="added-to-cart js-added-to-cart-${product.id}">
             <img src="images/icons/checkmark.png">
             Added
           </div>
@@ -57,12 +64,14 @@ products.forEach((product) => {
 document.querySelector('.js-products-grid').innerHTML = productsHTML;
 
 document.querySelectorAll('.js-add-to-cart').forEach((button) => {
+  let addedMessageTimeoutId;
   button.addEventListener('click', () => {
-    const productId = button.dataset.productId;
+    // const productId = button.dataset.productId;
+    const { productId } = button.dataset;
 
     let matchingItem;
 
-    let quantitySelected = Number(
+    let quantity = Number(
       document.querySelector(`.js-quantity-selector-${productId}`).value
     );
 
@@ -73,11 +82,11 @@ document.querySelectorAll('.js-add-to-cart').forEach((button) => {
     });
 
     if (matchingItem) {
-      matchingItem.quantity += quantitySelected;
+      matchingItem.quantity += quantity;
     } else {
       cart.push({
-        productId: productId,
-        quantity: quantitySelected,
+        productId,
+        quantity,
       });
     }
 
@@ -88,9 +97,51 @@ document.querySelectorAll('.js-add-to-cart').forEach((button) => {
     });
 
     document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
+    //we can also use an object (new) to save each products timeoutid
+
+    // We're going to use an object to save the timeout ids.
+    // The reason we use an object is because each product
+    // will have its own timeoutId. So an object lets us
+    // save multiple timeout ids for different products.
+    // For example:
+    // {
+    //   'product-id1': 2,
+    //   'product-id2': 5,
+    //   ...
+    // }
+    // (2 and 5 are ids that are returned when we call setTimeout).
+    // const addedMessageTimeouts = {};
+    // const previousTimeoutId = addedMessageTimeouts[productId];
+
+    // if (previousTimeoutId) {
+    //         clearTimeout(previousTimeoutId);
+    //       }
+
+    //       const timeoutId = setTimeout(() => {
+    //         addedMessage.classList.remove('added-to-cart-visible');
+    //       }, 2000);
+
+    //       // Save the timeoutId for this product
+    //       // so we can stop it later if we need to.
+    //       addedMessageTimeouts[productId] = timeoutId;
+    document
+      .querySelector(`.js-added-to-cart-${productId}`)
+      .classList.add('added-to-cart-show');
+
+    if (addedMessageTimeoutId) {
+      clearTimeout(addedMessageTimeoutId);
+    }
+
+    const timeoutId = setTimeout(() => {
+      document
+        .querySelector(`.js-added-to-cart-${productId}`)
+        .classList.remove('added-to-cart-show');
+    }, 2000);
+
+    addedMessageTimeoutId = timeoutId;
 
     console.log(`Cart Quantity: ${cartQuantity}`);
-    console.log(`Quantity Selected: ${quantitySelected}`);
+    console.log(`Quantity Selected: ${quantity}`);
     console.log(cart);
   });
 });

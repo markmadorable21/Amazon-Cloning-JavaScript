@@ -14,7 +14,9 @@ cart.forEach((cartItem) => {
       matchingProduct = product;
     }
   });
-  cartSummaryHTML += `<div class="cart-item-container">
+  cartSummaryHTML += `<div class="cart-item-container js-cart-item-container-${
+    matchingProduct.id
+  }">
       <div class="delivery-date">Delivery date: Tuesday, June 21</div>
 
       <div class="cart-item-details-grid">
@@ -97,6 +99,11 @@ document.querySelectorAll('.js-delete-link').forEach((link) => {
   link.addEventListener('click', () => {
     const productId = link.dataset.productId; //we need to know what product 'Delete' link is clicked. We need to write a data attribute in the html element and use link.dataset.productId to access the productId in the attribute
     removeFromCart(productId);
-    console.log(cart);
+
+    const container = document.querySelector(
+      `.js-cart-item-container-${productId}`
+    );
+    container.remove();
+    console.log(container);
   });
 });

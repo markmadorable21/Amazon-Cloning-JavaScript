@@ -1,4 +1,4 @@
-import { cart, removeFromCart } from '../data/cart.js';
+import { cart, removeFromCart, calculateCartQuantity } from '../data/cart.js';
 import { products } from '../data/products.js';
 import { formatCurrency } from './utils/money.js';
 
@@ -105,5 +105,23 @@ document.querySelectorAll('.js-delete-link').forEach((link) => {
     );
     container.remove();
     console.log(container);
+    updateCartQuantity();
   });
 });
+
+function updateCartQuantity() {
+  const quantity = calculateCartQuantity();
+  document.querySelector('.js-checkout-header-middle-section').innerHTML = `<div
+          class="checkout-header-middle-section js-checkout-header-middle-section"
+        >
+          Checkout (<a
+            class="return-to-home-link js-return-to-home-link"
+            href="amazon.html"
+          >${quantity} items</a
+          >)
+        </div>`;
+
+  console.log(`Cart Quantity: ${quantity}`);
+}
+
+updateCartQuantity();

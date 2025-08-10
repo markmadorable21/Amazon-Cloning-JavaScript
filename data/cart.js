@@ -17,7 +17,7 @@ if (!cart) {
 // NORMALIZING THE DATA OR DE-DUPLICATING THE DATA
 //not including the other product details, the important is the productId so that we can reuse the product.js data
 
-function saveToStorage() {
+export function saveToStorage() {
   localStorage.setItem('cart', JSON.stringify(cart));
 }
 
@@ -68,4 +68,18 @@ export function calculateCartQuantity() {
     cartQuantity += cartItem.quantity;
   });
   return cartQuantity;
+}
+
+export function updateQuantity(productId, newQuantity) {
+  let matchingItem;
+  cart.forEach((cartItem) => {
+    if (productId === cartItem.productId) {
+      matchingItem = cartItem;
+    }
+
+    if (matchingItem) {
+      matchingItem.quantity = newQuantity;
+    }
+  });
+  return matchingItem.quantity;
 }

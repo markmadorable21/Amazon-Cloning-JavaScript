@@ -14,6 +14,7 @@ import {
   deliveryOptions,
   getDeliveryOption,
 } from '../../data/deliveryOptions.js';
+import { renderPaymentSummary } from './paymentSummary.js';
 
 //default export in dayjs since it has no brackets
 //another way of exporting
@@ -23,9 +24,9 @@ import {
 
 //External Libraries
 hello();
-const today = dayjs();
-const deliveryDate = today.add(7, 'days');
-console.log(deliveryDate.format('dddd, MMMM D'));
+// const today = dayjs();
+// const deliveryDate = today.add(7, 'days');
+// console.log(deliveryDate.format('dddd, MMMM D'));
 
 export function renderOrderSummary() {
   let cartSummaryHTML = '';
@@ -143,6 +144,7 @@ export function renderOrderSummary() {
       container.remove();
       console.log(container);
       updateCartQuantity();
+      renderPaymentSummary();
     });
   });
 
@@ -216,6 +218,7 @@ export function renderOrderSummary() {
       2. View - codes that takes the data and displays it on the page. Example are the html generation or the additioning technique
       3. Controller - runs some code when we interact with the page like the DOM
       */
+      renderPaymentSummary();
     });
   });
 }

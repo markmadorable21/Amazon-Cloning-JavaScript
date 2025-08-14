@@ -24,35 +24,36 @@ const today = dayjs();
 const deliveryDate = today.add(7, 'days');
 console.log(deliveryDate.format('dddd, MMMM D'));
 
-let cartSummaryHTML = '';
-cart.forEach((cartItem) => {
-  const productId = cartItem.productId;
+function renderOrderSummary() {
+  let cartSummaryHTML = '';
+  cart.forEach((cartItem) => {
+    const productId = cartItem.productId;
 
-  let matchingProduct;
+    let matchingProduct;
 
-  products.forEach((product) => {
-    if (product.id === productId) {
-      matchingProduct = product;
-    }
-  });
+    products.forEach((product) => {
+      if (product.id === productId) {
+        matchingProduct = product;
+      }
+    });
 
-  const deliveryOptionId = cartItem.deliveryOptionId;
+    const deliveryOptionId = cartItem.deliveryOptionId;
 
-  let deliveryOption;
+    let deliveryOption;
 
-  deliveryOptions.forEach((option) => {
-    if (option.id === deliveryOptionId) {
-      deliveryOption = option;
-    }
-  });
+    deliveryOptions.forEach((option) => {
+      if (option.id === deliveryOptionId) {
+        deliveryOption = option;
+      }
+    });
 
-  const today = dayjs();
-  const deliveryDate = today.add(deliveryOption.deliveryDays, 'days');
-  const dateString = deliveryDate.format('dddd, MMMM D');
+    const today = dayjs();
+    const deliveryDate = today.add(deliveryOption.deliveryDays, 'days');
+    const dateString = deliveryDate.format('dddd, MMMM D');
 
-  cartSummaryHTML += `<div class="cart-item-container js-cart-item-container-${
-    matchingProduct.id
-  }">
+    cartSummaryHTML += `<div class="cart-item-container js-cart-item-container-${
+      matchingProduct.id
+    }">
       <div class="delivery-date">Delivery date: ${dateString}</div>
 
       <div class="cart-item-details-grid">
@@ -103,25 +104,25 @@ cart.forEach((cartItem) => {
         </div>
       </div>
     </div>`;
-});
+  });
 
-function deliveryOptionsHTML(matchingProduct, cartItem) {
-  let html = '';
-  deliveryOptions.forEach((deliveryOption) => {
-    const today = dayjs();
-    const deliveryDate = today.add(deliveryOption.deliveryDays, 'days');
-    const dateString = deliveryDate.format('dddd, MMMM D');
+  function deliveryOptionsHTML(matchingProduct, cartItem) {
+    let html = '';
+    deliveryOptions.forEach((deliveryOption) => {
+      const today = dayjs();
+      const deliveryDate = today.add(deliveryOption.deliveryDays, 'days');
+      const dateString = deliveryDate.format('dddd, MMMM D');
 
-    const priceString =
-      deliveryOption.priceCents === 0
-        ? 'FREE'
-        : `$${formatCurrency(deliveryOption.priceCents)} -`;
+      const priceString =
+        deliveryOption.priceCents === 0
+          ? 'FREE'
+          : `$${formatCurrency(deliveryOption.priceCents)} -`;
 
-    const isChecked = deliveryOption.id === cartItem.deliveryOptionId;
+      const isChecked = deliveryOption.id === cartItem.deliveryOptionId;
 
-    html += `<div class="delivery-option js-delivery-option" data-product-id="${
-      matchingProduct.id
-    }" data-delivery-option-id="${deliveryOption.id}">
+      html += `<div class="delivery-option js-delivery-option" data-product-id="${
+        matchingProduct.id
+      }" data-delivery-option-id="${deliveryOption.id}">
             <input
               type="radio"
               ${isChecked ? 'checked' : ''}
@@ -133,30 +134,32 @@ function deliveryOptionsHTML(matchingProduct, cartItem) {
               <div class="delivery-option-price">${priceString} Shipping</div>
             </div>
           </div>`;
+    });
+
+    return html;
+  }
+
+  document.querySelector('.js-order-summary').innerHTML = cartSummaryHTML;
+
+  document.querySelectorAll('.js-delete-link').forEach((link) => {
+    link.addEventListener('click', () => {
+      const productId = link.dataset.productId; //we need to know what product 'Delete' link is clicked. We need to write a data attribute in the html element and use link.dataset.productId to access the productId in the attribute
+      removeFromCart(productId);
+
+      const container = document.querySelector(
+        `.js-cart-item-container-${productId}`
+      );
+      container.remove();
+      console.log(container);
+      updateCartQuantity();
+    });
   });
 
-  return html;
-}
-
-document.querySelector('.js-order-summary').innerHTML = cartSummaryHTML;
-
-document.querySelectorAll('.js-delete-link').forEach((link) => {
-  link.addEventListener('click', () => {
-    const productId = link.dataset.productId; //we need to know what product 'Delete' link is clicked. We need to write a data attribute in the html element and use link.dataset.productId to access the productId in the attribute
-    removeFromCart(productId);
-
-    const container = document.querySelector(
-      `.js-cart-item-container-${productId}`
-    );
-    container.remove();
-    console.log(container);
-    updateCartQuantity();
-  });
-});
-
-function updateCartQuantity() {
-  const quantity = calculateCartQuantity();
-  document.querySelector('.js-checkout-header-middle-section').innerHTML = `<div
+  function updateCartQuantity() {
+    const quantity = calculateCartQuantity();
+    document.querySelector(
+      '.js-checkout-header-middle-section'
+    ).innerHTML = `<div
           class="checkout-header-middle-section js-checkout-header-middle-section"
         >
           Checkout (<a
@@ -166,49 +169,56 @@ function updateCartQuantity() {
           >)
         </div>`;
 
-  console.log(`Cart Quantity: ${quantity}`);
+    console.log(`Cart Quantity: ${quantity}`);
+  }
+
+  document.querySelectorAll('.js-update-quantity-link').forEach((link) => {
+    link.addEventListener('click', () => {
+      const productId = link.dataset.productId;
+      const container = document.querySelector(
+        `.js-cart-item-container-${productId}`
+      );
+      const test = container.classList.add('is-editing-quantity');
+    });
+  });
+
+  document.querySelectorAll('.js-save-quantity-link').forEach((link) => {
+    link.addEventListener('click', () => {
+      const productId = link.dataset.productId;
+      const container = document.querySelector(
+        `.js-cart-item-container-${productId}`
+      );
+      console.log(container);
+      container.classList.remove('is-editing-quantity');
+
+      const inputtedQty = Number(
+        document.querySelector(`.js-quantity-input-${productId}`).value
+      );
+      console.log(`inputtedQty: ${inputtedQty}`);
+
+      const qty = updateQuantity(productId, inputtedQty);
+      console.log(`qty: ${qty}`);
+
+      updateCartQuantity();
+
+      document.querySelector(`.js-quantity-label-${productId}`).innerHTML = qty;
+
+      saveToStorage();
+    });
+  });
+
+  updateCartQuantity();
+
+  document.querySelectorAll('.js-delivery-option').forEach((element) => {
+    element.addEventListener('click', () => {
+      const { productId, deliveryOptionId } = element.dataset;
+      updateDeliveryOption(productId, deliveryOptionId);
+      renderOrderSummary(); //this is called RECUURSION
+      /*
+      RECURSION means a function calling itself or re-running itself from within itself like renderOrderSummary() to update the page immediately
+      */
+    });
+  });
 }
 
-document.querySelectorAll('.js-update-quantity-link').forEach((link) => {
-  link.addEventListener('click', () => {
-    const productId = link.dataset.productId;
-    const container = document.querySelector(
-      `.js-cart-item-container-${productId}`
-    );
-    const test = container.classList.add('is-editing-quantity');
-  });
-});
-
-document.querySelectorAll('.js-save-quantity-link').forEach((link) => {
-  link.addEventListener('click', () => {
-    const productId = link.dataset.productId;
-    const container = document.querySelector(
-      `.js-cart-item-container-${productId}`
-    );
-    console.log(container);
-    container.classList.remove('is-editing-quantity');
-
-    const inputtedQty = Number(
-      document.querySelector(`.js-quantity-input-${productId}`).value
-    );
-    console.log(`inputtedQty: ${inputtedQty}`);
-
-    const qty = updateQuantity(productId, inputtedQty);
-    console.log(`qty: ${qty}`);
-
-    updateCartQuantity();
-
-    document.querySelector(`.js-quantity-label-${productId}`).innerHTML = qty;
-
-    saveToStorage();
-  });
-});
-
-updateCartQuantity();
-
-document.querySelectorAll('.js-delivery-option').forEach((element) => {
-  element.addEventListener('click', () => {
-    const { productId, deliveryOptionId } = element.dataset;
-    updateDeliveryOption(productId, deliveryOptionId);
-  });
-});
+renderOrderSummary();

@@ -197,6 +197,7 @@ export function renderOrderSummary() {
       document.querySelector(`.js-quantity-label-${productId}`).innerHTML = qty;
 
       saveToStorage();
+      renderPaymentSummary();
     });
   });
 

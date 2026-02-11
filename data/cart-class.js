@@ -4,22 +4,25 @@
 class Cart {
   //adding a property to a class
   //every object generated will have this property
-  cartItems = undefined;
-  localStorageKey = undefined;
-
+  cartItems;
   //can be define with
-  //cartItems;
+  //cartItems = undefined;
+
+  //the hash before the property makes it private and only be used inside the class
+  #localStorageKey;
 
   constructor(localStorageKey) {
     //since we have new Cart class variable localStorageKey, we use the class instance to set it like below
-    this.localStorageKey = localStorageKey;
+    this.#localStorageKey = localStorageKey;
     //businessCart.localStorageKey = 'cart-business';
 
-    this.loadFromStorage();
+    this.#loadFromStorage();
     //businessCart.loadFromStorage();
   }
-  loadFromStorage() {
-    this.cartItems = JSON.parse(localStorage.getItem(this.localStorageKey));
+
+  // private method to be used only inside the class
+  #loadFromStorage() {
+    this.cartItems = JSON.parse(localStorage.getItem(this.#localStorageKey));
 
     if (!this.cartItems) {
       this.cartItems = [
@@ -38,7 +41,7 @@ class Cart {
     }
   }
   saveToStorage() {
-    localStorage.setItem(this.localStorageKey, JSON.stringify(this.cartItems));
+    localStorage.setItem(this.#localStorageKey, JSON.stringify(this.cartItems));
   }
   addToCart(productId) {
     let matchingItem;

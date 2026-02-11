@@ -6,6 +6,18 @@ class Cart {
   //every object generated will have this property
   cartItems = undefined;
   localStorageKey = undefined;
+
+  //can be define with
+  //cartItems;
+
+  constructor(localStorageKey) {
+    //since we have new Cart class variable localStorageKey, we use the class instance to set it like below
+    this.localStorageKey = localStorageKey;
+    //businessCart.localStorageKey = 'cart-business';
+
+    this.loadFromStorage();
+    //businessCart.loadFromStorage();
+  }
   loadFromStorage() {
     this.cartItems = JSON.parse(localStorage.getItem(this.localStorageKey));
 
@@ -107,20 +119,13 @@ class Cart {
 // "export let cart;" is equal to "export let cart = undefined;"
 
 // object generation with new syntax using Class
-const cart = new Cart();
-const businessCart = new Cart();
+const cart = new Cart('cart-oop');
+const businessCart = new Cart('cart-business');
 
-//since we have new Cart class variable localStorageKey, we use the class instance to set it like below
-cart.localStorageKey = 'cart-oop';
-businessCart.localStorageKey = 'cart-business';
-
-cart.loadFromStorage();
-businessCart.loadFromStorage();
-
-console.log('original cart class-generated');
+console.log('original cart class-generated with constructor');
 console.log(cart);
 
-console.log('business cart class-generated');
+console.log('business cart class-generated with constructor');
 console.log(businessCart);
 
 // cart.addToCart('15b6fc6f-327a-4ec4-896f-486349e85a3d');

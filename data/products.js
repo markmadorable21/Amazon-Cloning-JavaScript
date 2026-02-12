@@ -566,3 +566,8 @@ export const products = [
 });
 
 console.log(products);
+
+const date = new Date();
+console.log(date);
+const time = date.toLocaleTimeString();
+console.log(time);

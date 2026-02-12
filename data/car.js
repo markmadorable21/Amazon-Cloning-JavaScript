@@ -17,7 +17,7 @@ class Car {
 
   go() {
     if (this.speed <= 200) {
-      return (this.speed += 5);
+      return (this.speed += 5); 
     } else return console.log('Invalid');
   }
 

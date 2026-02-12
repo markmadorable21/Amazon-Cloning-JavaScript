@@ -41,6 +41,8 @@ const product1 = new Product({
 });
 console.log(product1);
 
+//adding map to loop each products using a variable
+// converting an array object  into a class
 export const products = [
   {
     id: 'e43638ce-6aa0-4b85-b27f-e1d07eb678c6',
@@ -512,4 +514,8 @@ export const products = [
     priceCents: 2400,
     keywords: ['sweaters', 'hoodies', 'apparel', 'mens'],
   },
-];
+].map((productDetails) => {
+  return new Product(productDetails);
+});
+
+console.log(products);

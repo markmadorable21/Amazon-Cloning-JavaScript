@@ -605,9 +605,18 @@ export function loadProducts(fun) {
     console.log('load products');
     fun();
   });
+
+  //error handling if we use callbacks
+  //this will not run the method above
+  xhr.addEventListener('error', (error) => {
+    console.log(`Unexpected error: ${error}`);
+    console.log(error);
+  });
+
   xhr.open('GET', 'https://supersimplebackend.dev/products');
   xhr.send();
 }
+// loadProducts();
 
 console.log(products);
 

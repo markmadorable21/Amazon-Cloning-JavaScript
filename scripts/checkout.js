@@ -34,8 +34,8 @@ async function loadPage() {
       loadCart(() => {
         //throw does not work asynchronously or it does not create an error in the future
         // we will use reject() as a parameter
-     //   reject('error');
-        // resolve(';bahog belat');
+        //   reject('error');
+        resolve('bahog belat');
       });
     });
   } catch (e) {

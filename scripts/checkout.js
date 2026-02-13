@@ -2,7 +2,7 @@ import { renderOrderSummary } from './checkout/orderSummary.js';
 import { renderPaymentSummary } from './checkout/paymentSummary.js';
 import '../data/car.js';
 // import '../data/backend-practice.js';
-import { loadProducts } from '../data/products.js';
+import { loadProducts, loadProductsFetch } from '../data/products.js';
 import { loadCart } from '../data/cart.js';
 
 //importing all methods in a file
@@ -13,45 +13,65 @@ import { loadCart } from '../data/cart.js';
 //resolve is a function as parameter
 // resolve let us control when to go to the next step
 
-Promise.all([
-  new Promise((resolve) => {
-    console.log('start promise');
-    loadProducts(() => {
-      resolve('bahog oten'); // resolve means we wait for the products to be loaded
-      console.log('finished loading');
-    });
-  }),
-  new Promise((resolve) => {
+//async await = shortcut for promises cox it removes extra codes .then, resolve
+// async await = even better way than promises to handle asynchronous
+
+//async = makes a function return a promise
+
+//await = lets us wait for a promise to finish, before going to the next line
+async function loadPage() {
+  console.log('load page');
+  await loadProductsFetch(); // await is equal to .then, it waits to finish fetching/executing the line/method b4 going down to the next line
+  const value = await new Promise((resolve) => {
     loadCart(() => {
       resolve('bahog belat');
     });
-  }),
-]).then((values) => {
-  console.log(values);
+  });
+
   renderOrderSummary();
   renderPaymentSummary();
+
+  return 'value3'; // equals to resolve('value3') and will be saved to value below in .then
+}
+
+loadPage().then((value) => {
+  console.log('next bitch');
+  console.log(value);
 });
 
-new Promise((resolve) => {
-  console.log('start promise');
-  loadProducts(() => {
-    resolve('value1'); // resolve means we wait for the products to be loaded
-    console.log('finished loading');
-  });
-})
-  .then((value) => {
-    console.log(value);
-    console.log('next step');
-    return new Promise((resolve) => {
-      loadCart(() => {
-        resolve();
-      });
-    });
-  })
-  .then(() => {
-    renderOrderSummary();
-    renderPaymentSummary();
-  });
+// Promise.all([
+//   loadProductsFetch(),
+//   new Promise((resolve) => {
+//     loadCart(() => {
+//       resolve('bahog belat');
+//     });
+//   }),
+// ]).then((values) => {
+//   console.log(values);
+//   renderOrderSummary();
+//   renderPaymentSummary();
+// });
+
+// new Promise((resolve) => {
+//   console.log('start promise');
+//   loadProducts(() => {
+//     resolve('value1'); // resolve means we wait for the products to be loaded
+//     console.log('finished loading');
+//   });
+// })
+//   .then((value) => {
+//     console.log(value);
+//     console.log('next step');
+//     return new Promise((resolve) => {
+//       loadCart(() => {
+//         resolve();
+//       });
+//     });
+//   })
+//   .then(() => {
+//     renderOrderSummary();
+//     renderPaymentSummary();
+//   });
 
 //Promise.all
 //let us run multiple promises at the same time and wait for all of them to finish

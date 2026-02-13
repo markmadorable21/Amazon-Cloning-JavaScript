@@ -613,10 +613,10 @@ export function loadProducts(fun) {
     console.log(error);
   });
 
-  xhr.open('GET', 'https://supersimplebackend.dev/products');
+  xhr.open('GET', 'https://errors.supersimplebackend.dev/products');
   xhr.send();
 }
-// loadProducts();
+loadProducts();
 
 console.log(products);
 

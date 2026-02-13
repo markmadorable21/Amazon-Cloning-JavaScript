@@ -20,13 +20,18 @@ import { loadCart } from '../data/cart.js';
 
 //await = lets us wait for a promise to finish, before going to the next line
 async function loadPage() {
-  console.log('load page');
-  await loadProductsFetch(); // await is equal to .then, it waits to finish fetching/executing the line/method b4 going down to the next line
-  const value = await new Promise((resolve) => {
-    loadCart(() => {
-      resolve('bahog belat');
+  try {
+    console.log('load page');
+    await loadProductsFetch(); // await is equal to .then, it waits to finish fetching/executing the line/method b4 going down to the next line
+    const value = await new Promise((resolve) => {
+      loadCart(() => {
+        resolve('bahog belat');
+      });
     });
-  });
+  } catch (e) {
+    console.log(`Error cocksucker: ${e}`);
+    console.log(e);
+  }
 
   renderOrderSummary();
   renderPaymentSummary();

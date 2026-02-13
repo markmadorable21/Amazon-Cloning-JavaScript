@@ -585,8 +585,8 @@ export function loadProductsFetch() {
       });
 
       console.log('load productss');
-    })
-    .catch(console.log('Unexpected'));
+    });
+  // .catch(console.log('Unexpected error'));
 
   return promise;
 }

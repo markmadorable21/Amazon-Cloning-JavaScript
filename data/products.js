@@ -570,7 +570,7 @@ export let products = [];
 
 //fetch(() = better way to send HTTP request to the backend since it uses promise, while XMLHttpRequest uses callback
 export function loadProductsFetch() {
-  const promise = fetch('https://error.supersimplebackend.dev/products')
+  const promise = fetch('https://supersimplebackend.dev/products')
     .then((response) => {
       console.log(response);
       return response.json();
@@ -585,8 +585,8 @@ export function loadProductsFetch() {
       });
 
       console.log('load productss');
-    });
-  // .catch(console.log('Unexpected error'));
+    })
+    .catch(console.log('Unexpected error'));
 
   return promise;
 }

@@ -21,11 +21,21 @@ import { loadCart } from '../data/cart.js';
 //await = lets us wait for a promise to finish, before going to the next line
 async function loadPage() {
   try {
+    // throw = can be used to manually create error/s
+    // throw = creates an error that will be catched later or be thrown in catch part
+
+    //throw 'error1'; // error1 is the error value
+    // when we get an error, it will skip the rest of the code inside the curly braces
+    // the error value 'error1' will be saved in error value in catch parameter
     console.log('load page');
     await loadProductsFetch(); // await is equal to .then, it waits to finish fetching/executing the line/method b4 going down to the next line
-    const value = await new Promise((resolve) => {
+    const value = await new Promise((resolve, reject) => {
+      // throw 'error2';
       loadCart(() => {
-        resolve('bahog belat');
+        //throw does not work asynchronously or it does not create an error in the future
+        // we will use reject() as a parameter
+     //   reject('error');
+        // resolve(';bahog belat');
       });
     });
   } catch (e) {
